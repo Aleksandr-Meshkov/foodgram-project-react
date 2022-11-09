@@ -113,6 +113,7 @@ DJOSER = {
         'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
         'user_list': ['rest_framework.permissions.AllowAny'],
     },
+    ''
     'HIDE_USERS': False,
     'LOGIN_FIELD': 'email',
 }
@@ -132,3 +133,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+EMAILFIELD_254 = 254
+CHARFIELD_200 = 200
+CHARFIELD_150 = 150
+CHARFIELD_7 = 7

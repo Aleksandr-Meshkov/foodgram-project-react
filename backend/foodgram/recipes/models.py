@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 
@@ -7,9 +8,15 @@ from .validators import validate_cooking_time
 
 class Tag(models.Model):
     """ Модель Теги. """
-    name = models.CharField('Название тега', max_length=200, unique=True)
-    color = models.CharField('Цвет', max_length=7, unique=True)
-    slug = models.SlugField('Slug', max_length=200, unique=True)
+    name = models.CharField(
+        'Название тега', max_length=settings.CHARFIELD_200, unique=True
+    )
+    color = models.CharField(
+        'Цвет', max_length=settings.CHARFIELD_7, unique=True
+    )
+    slug = models.SlugField(
+        'Slug', max_length=settings.CHARFIELD_200, unique=True
+    )
 
     class Meta:
         verbose_name = 'Тег'
@@ -22,8 +29,12 @@ class Tag(models.Model):
 
 class Ingredient(models.Model):
     """ Модель Ингридиенты. """
-    name = models.CharField('Название тега', max_length=200)
-    measurement_unit = models.CharField('Единица измерения', max_length=200)
+    name = models.CharField(
+        'Название тега', max_length=settings.CHARFIELD_200
+    )
+    measurement_unit = models.CharField(
+        'Единица измерения', max_length=settings.CHARFIELD_200
+    )
 
     class Meta:
         verbose_name = 'Ингридиент'
@@ -52,7 +63,9 @@ class Recipe(models.Model):
         through='IngredientRecipe',
         verbose_name='Ингредиенты'
     )
-    name = models.CharField('Название рецепта', max_length=200)
+    name = models.CharField(
+        'Название рецепта', max_length=settings.CHARFIELD_200
+    )
     image = models.ImageField(upload_to='recipes/')
     text = models.TextField('Описание рецепта')
     cooking_time = models.PositiveSmallIntegerField(
