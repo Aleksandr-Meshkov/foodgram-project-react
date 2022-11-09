@@ -28,7 +28,9 @@ def subscriptions_list(request):
     subscriptions = User.objects.filter(following__user=request.user)
     paginator = Paginator()
     page = paginator.paginate_queryset(subscriptions, request=request)
-    serializer = MySubscriptionSerializer(page, many=True)
+    serializer = MySubscriptionSerializer(
+        page, many=True, context={'request': request}
+    )
     return paginator.get_paginated_response(serializer.data)
 
 
