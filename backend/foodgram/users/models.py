@@ -7,12 +7,13 @@ class User(AbstractUser):
     username = models.CharField('Логин', max_length=150, unique=True)
     first_name = models.CharField('Имя', max_length=150)
     last_name = models.CharField('Фамилия', max_length=150)
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email', 'first_name', 'last_name']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ('username', 'first_name', 'last_name')
 
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+        ordering = ('-id',)
 
     def __str__(self):
         return self.username
@@ -39,7 +40,11 @@ class Subscribe(models.Model):
             models.UniqueConstraint(
                 fields=['user', 'author'],
                 name='unique_user_author'
-            )
+            ),
+            models.CheckConstraint(
+                check=~models.Q(user=models.F("author")),
+                name="prevent_self_follow"
+            ),
         ]
 
     def __str__(self):

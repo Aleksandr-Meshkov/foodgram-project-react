@@ -1,8 +1,8 @@
-from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import UniqueConstraint
 
-User = get_user_model()
+from users.models import User
+from .validators import validate_cooking_time
 
 
 class Tag(models.Model):
@@ -14,7 +14,7 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
-        ordering = ['name']
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -28,13 +28,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Ингридиенты'
-        ordering = ['name']
-        constraints = [
-            UniqueConstraint(
-                fields=['name', 'measurement_unit'],
-                name='ingredient_name_unit_unique'
-            )
-        ]
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -61,13 +55,15 @@ class Recipe(models.Model):
     name = models.CharField('Название рецепта', max_length=200)
     image = models.ImageField(upload_to='recipes/')
     text = models.TextField('Описание рецепта')
-    cooking_time = models.IntegerField('Время приготовления')
+    cooking_time = models.PositiveSmallIntegerField(
+        'Время приготовления', validators=[validate_cooking_time]
+    )
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        ordering = ['-pub_date']
+        ordering = ('-pub_date',)
 
     def __str__(self):
         return self.name
@@ -139,7 +135,7 @@ class Favorite(models.Model):
         constraints = [
             UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='user_recipe_unique'
+                name='favorite_unique'
             )
         ]
 
@@ -165,6 +161,6 @@ class ShoppingCart(models.Model):
         constraints = [
             UniqueConstraint(
                 fields=['user', 'recipe'],
-                name='user_recipe_unique'
+                name='shoppingcart_unique'
             )
         ]

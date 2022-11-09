@@ -1,7 +1,7 @@
 from django_filters import rest_framework as filter
+from rest_framework.filters import SearchFilter
 
-from recipes.models import Recipe, Tag
-from users.models import User
+from recipes.models import Recipe, Tag, Ingredient
 
 
 class RecipeFilter(filter.FilterSet):
@@ -9,20 +9,36 @@ class RecipeFilter(filter.FilterSet):
     Кастомный фильтр связанных моделяй, чтобы фильтрация не
     использовала первичный ключ.
     """
-    author = filter.ModelChoiceFilter(
-        field_name='author__username',
-        queryset=User.objects.all(),
-        label='Author',
-        to_field_name='username'
-    )
-    name = filter.CharFilter()
     tags = filter.ModelMultipleChoiceFilter(
         field_name='tags__slug',
         queryset=Tag.objects.all(),
         label='Tags',
         to_field_name='slug'
     )
+    is_favorited = filter.BooleanFilter(
+        field_name='is_favorited', method='filter_is_favorited'
+    )
+    is_in_shopping_cart = filter.BooleanFilter(
+        field_name='is_in_shopping_cart', method='get_is_in_shopping_cart'
+    )
 
     class Meta:
         model = Recipe
-        fields = ('author', 'name', 'tags')
+        fields = ('tags', 'is_favorited', 'is_in_shopping_cart')
+
+    def filter_is_favorited(self, queryset, name, value):
+        if value:
+            return queryset.filter(favorites__user=self.request.user)
+        return queryset
+
+    def filter_is_in_shopping_cart(self, queryset, name, value):
+        if value:
+            return queryset.filter(shoppingcart__user=self.request.user)
+        return queryset
+
+
+class IngredientFilter(SearchFilter):
+    def filter_queryset(self, request, queryset, view):
+        search = request.GET['search']
+        queryset = Ingredient.objects.filter(name__icontains=search)
+        return queryset
