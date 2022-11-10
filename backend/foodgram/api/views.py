@@ -97,23 +97,28 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return RecipeSerializer
 
     @action(
-        methods=['post', 'delete'],
+        methods=['post'],
         detail=True,
         permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk=None):
         """
-        Добавление, удаление рецепта в список покупок.
+        Добавление рецепта в список покупок.
+        """
+        data = {
+            'user': request.user.id,
+            'recipe': pk
+        }
+        serializer = ShoppingCartSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @shopping_cart.mapping.delete
+    def delete_shopping_cart(self, request, pk=None):
+        """
+        Удаление рецепта из списка покупок.
         """
         recipe = get_object_or_404(Recipe, id=pk)
-        if request.method == 'POST':
-            data = {
-                'user': request.user.id,
-                'recipe': pk
-            }
-            serializer = ShoppingCartSerializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
         if ShoppingCart.objects.filter(
             user=request.user, recipe=recipe
         ).exists():
@@ -149,22 +154,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response
 
     @action(
-        methods=['post', 'delete'],
+        methods=['post'],
         detail=True,
         permission_classes=[IsAuthenticated])
     def favorite(self, request, pk=None):
         """
-        Добавление, удаление рецепта в избранные.
+        Добавление рецепта в избранные.
         """
-        if request.method == 'POST':
-            data = {
-                'user': request.user.id,
-                'recipe': pk
-            }
-            serializer = FavoriteSerializer(data=data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        data = {
+            'user': request.user.id,
+            'recipe': pk
+        }
+        serializer = FavoriteSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @favorite.mapping.delete
+    def delete_favorite(self, request, pk=None):
+        """
+        Удаление рецепта из избранного.
+        """
         recipe = get_object_or_404(Recipe, id=pk)
         if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
             Favorite.objects.filter(user=request.user, recipe=recipe).delete()
