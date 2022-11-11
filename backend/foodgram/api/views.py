@@ -3,17 +3,17 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
-from rest_framework.decorators import api_view, permission_classes, action
+from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 
-from .filters import RecipeFilter, IngredientFilter
-from .pagination import Paginator
-from .permissions import IsAuthorOrAdminOrReadOnly
-from .serializers import (FavoriteSerializer, IngredientSerializer,
-                          MySubscriptionSerializer, RecipeSerializer,
-                          ShoppingCartSerializer, ShowRecipeSerializer,
-                          SubscriptionSerializer, TagSerializer)
+from api.filters import IngredientFilter, RecipeFilter
+from api.pagination import Paginator
+from api.permissions import IsAuthorOrAdminOrReadOnly
+from api.serializers import (FavoriteSerializer, IngredientSerializer,
+                             MySubscriptionSerializer, RecipeSerializer,
+                             ShoppingCartSerializer, ShowRecipeSerializer,
+                             SubscriptionSerializer, TagSerializer)
 from recipes.models import (Favorite, Ingredient, IngredientRecipe, Recipe,
                             ShoppingCart, Tag)
 from users.models import Subscribe, User

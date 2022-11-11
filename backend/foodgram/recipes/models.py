@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from .validators import validate_cooking_time
+from recipes.validators import validate_cooking_time
 from users.models import User
 
 
