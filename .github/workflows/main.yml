@@ -55,5 +55,6 @@ jobs:
           # Пуш образа в Docker Hub 
           uses: docker/build-push-action@v2 
           with:
+            context: backend/foodgram
             push: true
             tags: aleksandr2021/foodgram_backend:v1
