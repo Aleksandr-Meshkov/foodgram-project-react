@@ -28,7 +28,7 @@ jobs:
         # запуск проверки проекта по flake8
         python -m flake8
 
-  build_and_push_to_docker_hub_backend:
+  build_and_push_to_docker_hub:
       name: Push Docker image_backend to Docker Hub
       runs-on: ubuntu-latest
       needs: tests
@@ -68,9 +68,8 @@ jobs:
         script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:v1
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:v1
-            сd infra
             sudo docker-compose stop
-            sudo docker-compose rm foodgram_backend
+            sudo docker-compose rm aleksandr2021/foodgram_backend
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
