@@ -2,8 +2,8 @@ from django.conf import settings
 from django.db import models
 from django.db.models import UniqueConstraint
 
-from users.models import User
 from .validators import validate_cooking_time
+from users.models import User
 
 
 class Tag(models.Model):

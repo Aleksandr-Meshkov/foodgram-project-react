@@ -38,7 +38,4 @@ class RecipeFilter(filter.FilterSet):
 
 
 class IngredientFilter(SearchFilter):
-    def filter_queryset(self, request, queryset, view):
-        search = request.GET['search']
-        queryset = Ingredient.objects.filter(name__icontains=search)
-        return queryset
+    search_param = 'name'

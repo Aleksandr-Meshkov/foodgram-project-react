@@ -30,8 +30,7 @@ class CustomUserSerializer(UserSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        user = User.objects.get(id=request.user.id)
-        return user.follower.filter(author=obj).exists()
+        return request.user.follower.filter(author=obj).exists()
 
 
 class CustomUserCreateSerializer(UserCreateSerializer):
@@ -95,22 +94,22 @@ class MySubscriptionSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        user = User.objects.get(id=request.user.id)
-        return user.follower.filter(author=obj).exists()
+        return request.user.follower.filter(author=obj).exists()
 
     def get_recipes(self, obj):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        author = User.objects.get(id=obj.id)
-        recipes = author.recipes.all()
+        recipes = obj.recipes.all()
+        limit = request.query_params.get('recipes_limit')
+        if limit:
+            recipes = recipes[:int(limit)]
         return RepresentationFavoriteSerializer(
             recipes, many=True
         ).data
 
     def get_recipes_count(self, obj):
-        author = User.objects.get(id=obj.id)
-        return author.recipes.all().count()
+        return obj.recipes.all().count()
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -199,15 +198,13 @@ class ShowRecipeSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         if not request or request.user.is_anonymous:
             return False
-        user = User.objects.get(id=request.user.id)
-        return user.favorites.filter(recipe_id=obj).exists()
+        return request.user.favorites.filter(recipe_id=obj).exists()
 
     def get_is_in_shopping_cart(self, obj):
         request = self.context.get('request')
         if request is None or request.user.is_anonymous:
             return False
-        user = User.objects.get(id=request.user.id)
-        return user.shoppingcart.filter(recipe_id=obj).exists()
+        return request.user.shoppingcart.filter(recipe_id=obj).exists()
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -285,9 +282,7 @@ class RecipeSerializer(serializers.ModelSerializer):
         tags = validated_data.pop('tags')
         self.create_ingredients(ingredients, instance)
         self.create_tags(tags, instance)
-        super().update(instance, validated_data)
-        instance.save()
-        return instance
+        return super().update(instance, validated_data)
 
     def to_representation(self, instance):
         return ShowRecipeSerializer(instance).data
