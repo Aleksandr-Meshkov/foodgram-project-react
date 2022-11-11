@@ -53,8 +53,8 @@ jobs:
             push: true
             tags: aleksandr2021/foodgram_backend:v1
 
-  build_and_push_to_docker_hub_frontend:
-      name: Push Docker image_frontend to Docker Hub
+  build_and_push_to_docker_hub:
+      name: Push Docker image to Docker Hub
       runs-on: ubuntu-latest
       needs: build_and_push_to_docker_hub_backend
       if: github.ref == 'refs/heads/master'
