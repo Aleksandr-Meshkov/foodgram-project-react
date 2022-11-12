@@ -19,7 +19,7 @@ services:
       - ./.env
 
   frontend:
-    image: aleksandr2021/foodgram_frontend:latest
+    image: aleksandr2021/foodgram_frontend:v2
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
