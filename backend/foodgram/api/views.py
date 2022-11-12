@@ -96,6 +96,27 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return ShowRecipeSerializer
         return RecipeSerializer
 
+    def add_recipe(self, request, pk, serializer):
+        data = {
+            'user': request.user.id,
+            'recipe': pk
+        }
+        serializer = serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def delete_recipe(self, request, pk, model):
+        recipe = get_object_or_404(Recipe, id=pk)
+        if model.objects.filter(
+            user=request.user, recipe=recipe
+        ).exists():
+            model.objects.filter(
+                user=request.user, recipe=recipe
+            ).delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_400_BAD_REQUEST)        
+
     @action(
         methods=['post'],
         detail=True,
@@ -104,29 +125,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """
         Добавление рецепта в список покупок.
         """
-        data = {
-            'user': request.user.id,
-            'recipe': pk
-        }
-        serializer = ShoppingCartSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.add_recipe(request, pk, ShoppingCartSerializer)
 
     @shopping_cart.mapping.delete
     def delete_shopping_cart(self, request, pk=None):
         """
         Удаление рецепта из списка покупок.
         """
-        recipe = get_object_or_404(Recipe, id=pk)
-        if ShoppingCart.objects.filter(
-            user=request.user, recipe=recipe
-        ).exists():
-            ShoppingCart.objects.filter(
-                user=request.user, recipe=recipe
-            ).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return self.delete_recipe(request, pk, ShoppingCart)
 
     @action(
         methods=['get'],
@@ -161,22 +167,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         """
         Добавление рецепта в избранные.
         """
-        data = {
-            'user': request.user.id,
-            'recipe': pk
-        }
-        serializer = FavoriteSerializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return self.add_recipe(request, pk, FavoriteSerializer)
 
     @favorite.mapping.delete
     def delete_favorite(self, request, pk=None):
         """
         Удаление рецепта из избранного.
         """
-        recipe = get_object_or_404(Recipe, id=pk)
-        if Favorite.objects.filter(user=request.user, recipe=recipe).exists():
-            Favorite.objects.filter(user=request.user, recipe=recipe).delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+        return self.delete_recipe(request, pk, Favorite)

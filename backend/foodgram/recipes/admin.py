@@ -13,15 +13,19 @@ class IngredientAdmin(admin.ModelAdmin):
 
 
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('author', 'name', 'cooking_time', 'favorites')
+    list_display = (
+        'author', 'name', 'cooking_time', 'favorites'
+    )
     search_fields = ('name',)
     list_filter = ('author', 'name', 'tags',)
     inlines = (Ingredients,)
 
     def favorites(self, obj):
-        if Favorite.objects.filter(recipe=obj).exists():
-            return Favorite.objects.filter(recipe=obj).count()
+        if obj.favorites.exists():
+            return obj.favorites.count()
         return 0
+
+    favorites.short_description = 'Избранное'
 
 
 class TagAdmin(admin.ModelAdmin):
