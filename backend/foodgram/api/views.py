@@ -115,7 +115,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 user=request.user, recipe=recipe
             ).delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(status=status.HTTP_400_BAD_REQUEST)        
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
     @action(
         methods=['post'],
