@@ -25,8 +25,9 @@
     sudo apt install docker.io 
     sudo apt install docker-compose
 ```
-**Создайте суперюзера и соберите статику:**
+**Создайте суперюзера, сделайте миграции соберите статику:**
 ```
+    sudo docker-compose exec backend python manage.py migrate
     sudo docker-compose exec backend python manage.py createsuperuser
     sudo docker-compose exec backend python manage.py collectstatic --no-input
 ```
@@ -36,3 +37,6 @@
     http://84.201.160.215/recipes
 ```
 ![CI](https://github.com/Aleksandr-Meshkov/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+
+Нaчальник ты специально задал пароль схожий с почтой, товарищу валидатору не понравился
+пароль на твой ник, новый пароль Qwerty123 !
