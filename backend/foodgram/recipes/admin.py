@@ -14,7 +14,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'author', 'name', 'cooking_time', 'favorites'
+        'author', 'name', 'cooking_time', 'favorites', 'amount_ingredients'
     )
     search_fields = ('name',)
     list_filter = ('author', 'name', 'tags',)
@@ -26,6 +26,15 @@ class RecipeAdmin(admin.ModelAdmin):
         return 0
 
     favorites.short_description = 'Избранное'
+
+    def amount_ingredients(self, obj):
+        if obj.ingredients.exists():
+            return ', '.join(
+                [str(ingredient) for ingredient in obj.ingredients.all()]
+            )
+        return 0
+
+    amount_ingredients.short_description = 'Ингредиенты'
 
 
 class TagAdmin(admin.ModelAdmin):

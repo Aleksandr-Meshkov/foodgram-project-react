@@ -86,6 +86,7 @@ class IngredientRecipe(models.Model):
     """ Модель связь Ингридиенты - Рецепты. """
     ingredient = models.ForeignKey(
         Ingredient,
+        related_name='recipes',
         on_delete=models.CASCADE,
         verbose_name='Ингредиент'
     )
