@@ -14,7 +14,7 @@ class IngredientAdmin(admin.ModelAdmin):
 
 class RecipeAdmin(admin.ModelAdmin):
     list_display = (
-        'author', 'name', 'cooking_time', 'favorites', 'ingredients'
+        'author', 'name', 'cooking_time', 'favorites'
     )
     search_fields = ('name',)
     list_filter = ('author', 'name', 'tags',)

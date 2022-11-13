@@ -8,6 +8,10 @@
 ![CI](https://img.shields.io/badge/Requests-2.26.0-yellow)
 ![CI](https://img.shields.io/badge/Simple--JWT-4.3.0-ff69b4)
 ![CI](https://img.shields.io/badge/Python-v3.8-blue)
+![CI](https://img.shields.io/badge/-Djoser-yellowgreen)
+![CI](https://img.shields.io/badge/-Nginx-blueviolet)
+![CI](https://img.shields.io/badge/-Docker-blueviolet)
+![CI](https://img.shields.io/badge/-Linux-red)
 ## **Стек технологий**
 **Запуск проекта:**
 
@@ -36,7 +40,5 @@
 ```
     http://84.201.160.215/recipes
 ```
-![CI](https://github.com/Aleksandr-Meshkov/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 
-Нaчальник ты специально задал пароль схожий с почтой, товарищу валидатору не понравился
-пароль на твой ник, новый пароль Qwerty123 !
+![CI](https://github.com/Aleksandr-Meshkov/foodgram-project-react/actions/workflows/main.yml/badge.svg)
